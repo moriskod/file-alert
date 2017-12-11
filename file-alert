@@ -5,6 +5,8 @@
 #  check index.html against FILESIZE..
 #  you will need working smtp mail delivery via
 #  mail command working on this box
+#  FILESIZE is set to current file size by wget'ting file and
+#  checking filesize.. 
 # @moriskod
 FILESIZE=842
 FILE="/usr/local/bin/index.html"
