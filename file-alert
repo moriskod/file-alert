@@ -1,0 +1,66 @@
+#!/bin/bash
+#!/bin/bash
+#  install script in /usr/local/bin and run there..
+#  download index.html from site
+#  check index.html against FILESIZE..
+#  you will need working smtp mail delivery via
+#  mail command working on this box
+# @moriskod
+FILESIZE=842
+FILE="/usr/local/bin/index.html"
+URL="http://holidayhackchallenge.com/index.html"
+MSG="holiday hack challenge"
+#mail address for alert
+MAILTO="address@email.com"
+#text address for text alert..
+TEXTTO="phonenumber@mobile.mycingular.net"
+BLANKMAIL="/tmp/blankmail"
+
+#create blank mail file in /tmp
+
+if [ ! -f $BLANKMAIL ]; then
+  echo '.' > $BLANKMAIL
+fi
+
+
+for (( ; ; ))
+do
+
+echo "Press CTRL+C to stop..."
+#set your retry loop time here..
+#sleep 180
+#added fancy countdown timer ..
+secs=$((3 * 30))
+while [ $secs -gt 0 ]; do
+   echo -ne "$secs\033[0K\r"
+   sleep 1
+   : $((secs--))
+done
+
+if [ -f $FILE ]; then rm $FILE; fi
+echo '..getting.. ' $URL
+wget -q --no-check-certificate $URL
+echo '..done..'
+sleep 5
+
+#added file exist check to prevent false alert
+# on index.html not being there.. (timeout?)
+if [ -f $FILE ]; then
+
+LSFILESIZE=`ls -la index.html | awk {'print $5'}`
+
+   echo 'filesize =' $LSFILESIZE 'bytes'
+   if [[ $LSFILESIZE != $FILESIZE ]]
+   then
+       echo '...alerting... '
+       mail -s $MSG $MAILTO < /etc/blankmail
+       mail -s $MSG $TEXTTO < /etc/blankmail
+       exit 0
+   fi
+
+else
+   echo "file not found..looping"
+
+fi
+
+done
