@@ -1,5 +1,4 @@
 #!/bin/bash
-#!/bin/bash
 #  install script in /usr/local/bin and run there..
 #  download index.html from site
 #  check index.html against FILESIZE..
